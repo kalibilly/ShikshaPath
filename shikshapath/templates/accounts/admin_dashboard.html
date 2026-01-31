@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - ShikshaPath{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-2">Admin Dashboard</h1>
+        <p class="text-gray-400">System Overview and Management</p>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm">Total Users</p>
+                    <p class="text-3xl font-bold">0</p>
+                </div>
+                <i class="fas fa-users text-4xl text-blue-400 opacity-20"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm">Total Courses</p>
+                    <p class="text-3xl font-bold">0</p>
+                </div>
+                <i class="fas fa-book text-4xl text-green-400 opacity-20"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm">Total Payments</p>
+                    <p class="text-3xl font-bold">$0</p>
+                </div>
+                <i class="fas fa-dollar-sign text-4xl text-yellow-400 opacity-20"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm">Flagged Content</p>
+                    <p class="text-3xl font-bold">0</p>
+                </div>
+                <i class="fas fa-flag text-4xl text-red-400 opacity-20"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Management Links -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="{% url 'admin_panel:users' %}" class="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition-colors">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-user-tie text-3xl text-blue-400"></i>
+                <div>
+                    <h3 class="text-lg font-bold">User Management</h3>
+                    <p class="text-gray-400 text-sm">Manage users and roles</p>
+                </div>
+            </div>
+        </a>
+        
+        <a href="{% url 'admin_panel:courses' %}" class="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition-colors">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-book-open text-3xl text-green-400"></i>
+                <div>
+                    <h3 class="text-lg font-bold">Course Management</h3>
+                    <p class="text-gray-400 text-sm">Manage courses and content</p>
+                </div>
+            </div>
+        </a>
+        
+        <a href="{% url 'admin_panel:payments' %}" class="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition-colors">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-credit-card text-3xl text-yellow-400"></i>
+                <div>
+                    <h3 class="text-lg font-bold">Payment Management</h3>
+                    <p class="text-gray-400 text-sm">View payments and transactions</p>
+                </div>
+            </div>
+        </a>
+        
+        <a href="{% url 'admin_panel:audit_logs' %}" class="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition-colors">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-history text-3xl text-purple-400"></i>
+                <div>
+                    <h3 class="text-lg font-bold">Audit Logs</h3>
+                    <p class="text-gray-400 text-sm">View system activity logs</p>
+                </div>
+            </div>
+        </a>
+        
+        <a href="{% url 'admin:index' %}" class="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition-colors">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-sliders-h text-3xl text-red-400"></i>
+                <div>
+                    <h3 class="text-lg font-bold">Django Admin</h3>
+                    <p class="text-gray-400 text-sm">Advanced admin settings</p>
+                </div>
+            </div>
+        </a>
+        
+        <a href="{% url 'home' %}" class="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition-colors">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-home text-3xl text-indigo-400"></i>
+                <div>
+                    <h3 class="text-lg font-bold">Back to Home</h3>
+                    <p class="text-gray-400 text-sm">Return to main site</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

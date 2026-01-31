@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - ShikshaPath{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-to-b from-gray-800 to-gray-900">
+    <!-- Course Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Course Content -->
+            <div class="md:col-span-2">
+                {% if course.thumbnail %}
+                <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" class="w-full h-96 object-cover rounded-lg mb-6">
+                {% else %}
+                <div class="w-full h-96 bg-gray-700 flex items-center justify-center rounded-lg mb-6">
+                    <i class="fas fa-video text-6xl text-gray-500"></i>
+                </div>
+                {% endif %}
+                
+                <h1 class="text-4xl font-bold mb-4">{{ course.title }}</h1>
+                
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <span class="text-gray-400">4.5 (125 ratings)</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-users text-blue-400"></i>
+                        <span class="text-gray-400">{{ course.enrollment_count }} students</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <p class="text-gray-300 text-lg">By <span class="font-semibold text-blue-400">{{ course.instructor.get_full_name|default:course.instructor.email }}</span></p>
+                </div>
+                
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">About this course</h2>
+                    <p class="text-gray-300 text-lg leading-relaxed">{{ course.description }}</p>
+                </div>
+                
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold mb-4">Course Content</h2>
+                    <div class="bg-gray-800 rounded-lg">
+                        {% if course.resources.all %}
+                            {% for resource in course.resources.all %}
+                            <div class="border-b border-gray-700 p-4 last:border-b-0">
+                                <div class="flex items-center space-x-4 justify-between">
+                                    <div class="flex items-center space-x-4 flex-1">
+                                        {% if resource.resource_type == 'video' %}
+                                            <i class="fas fa-play-circle text-blue-400 text-xl"></i>
+                                        {% elif resource.resource_type == 'pdf' %}
+                                            <i class="fas fa-file-pdf text-red-400 text-xl"></i>
+                                        {% elif resource.resource_type == 'notes' %}
+                                            <i class="fas fa-sticky-note text-yellow-400 text-xl"></i>
+                                        {% elif resource.resource_type == 'assignment' %}
+                                            <i class="fas fa-tasks text-purple-400 text-xl"></i>
+                                        {% endif %}
+                                        <div class="flex-1">
+                                            <h3 class="font-semibold">{{ resource.title }}</h3>
+                                            <p class="text-gray-400 text-sm">{{ resource.get_resource_type_display }}</p>
+                                            {% if resource.description %}
+                                                <p class="text-gray-400 text-sm mt-1">{{ resource.description }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if is_enrolled %}
+                                        <a href="{{ resource.file.url }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">Access</a>
+                                    {% else %}
+                                        <span class="text-gray-400 text-sm">Enroll to access</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="p-8 text-center">
+                            <p class="text-gray-400">No resources in this course yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="md:col-span-1">
+                <div class="bg-gray-800 rounded-lg p-6 sticky top-20">
+                    <h2 class="text-3xl font-bold text-blue-400 mb-4">${{ course.price }}</h2>
+                    
+                    {% if is_enrolled %}
+                    <div class="bg-green-600 text-white p-4 rounded mb-4 text-center">
+                        <i class="fas fa-check-circle text-2xl mb-2"></i>
+                        <p class="font-semibold">You're enrolled in this course</p>
+                    </div>
+                    <a href="{% url 'courses:my_courses' %}" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded text-center block">
+                        View Course
+                    </a>
+                    {% else %}
+                    <form method="POST" action="{% url 'courses:enroll_course' course.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded mb-4">
+                            Enroll Now
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <div class="bg-gray-700 rounded p-4 space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-layer-group text-blue-400"></i>
+                            <span class="text-gray-300">{{ course.resources.count }} resources</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-clock text-blue-400"></i>
+                            <span class="text-gray-300">Lifetime access</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-certificate text-blue-400"></i>
+                            <span class="text-gray-300">Certificate of completion</span>
+                        </div>
+                        {% if course.price > 0 %}
+                        <div class="flex items-start space-x-3 pt-4 border-t border-gray-600">
+                            <i class="fas fa-info-circle text-blue-400 mt-1"></i>
+                            <div class="text-sm text-gray-300">
+                                <p class="font-semibold mb-1">Price Breakdown:</p>
+                                <p>Your cost: <span class="font-bold">${{ course.price }}</span></p>
+                                <p class="text-xs text-gray-400 mt-1">Platform fee: ${{ platform_fee }}</p>
+                                <p class="text-xs text-gray-400">Instructor payout: ${{ instructor_payout }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Referral Section -->
+{% if user.is_authenticated %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-gradient-to-r from-purple-900 to-purple-800 rounded-lg p-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold flex items-center space-x-2">
+                <i class="fas fa-share-alt text-purple-300"></i>
+                <span>Share & Earn</span>
+            </h2>
+            <button id="generate-referral-btn" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">
+                <i class="fas fa-link"></i> Generate My Referral Link
+            </button>
+        </div>
+        
+        <p class="text-gray-300 mb-4">Share this course with your friends and network. Get rewarded when they enroll!</p>
+        
+        <div id="referral-section" class="hidden bg-gray-800 p-4 rounded mt-4">
+            <div class="flex items-center space-x-2">
+                <input type="text" id="referral-url" readonly class="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white" placeholder="Referral link will appear here">
+                <button id="copy-referral-btn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded font-semibold">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+                <a id="share-referral-btn" href="#" target="_blank" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded font-semibold text-white">
+                    <i class="fas fa-share-alt"></i> Share
+                </a>
+            </div>
+            <p class="text-gray-400 text-sm mt-2">✨ Share this link with your network! Friends who enroll using your link help support this course.</p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Ratings Section -->
+{% if is_enrolled or user == course.instructor %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center space-x-2">
+        <i class="fas fa-star text-yellow-400"></i>
+        <span>Course Reviews</span>
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Rating Form -->
+        {% if is_enrolled and not user_rating %}
+        <div class="bg-gray-800 rounded-lg p-6">
+            <h3 class="text-lg font-bold mb-4">Rate This Course</h3>
+            <form id="rating-form" method="POST" action="{% url 'courses:add_rating' course.id %}" class="space-y-4">
+                {% csrf_token %}
+                
+                <!-- Star Rating -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium">Your Rating</label>
+                    <div id="star-rating" class="flex space-x-2">
+                        {% for i in "12345" %}
+                        <label class="cursor-pointer">
+                            <input type="radio" name="rating" value="{{ i }}" class="hidden peer">
+                            <i class="fas fa-star text-3xl text-gray-400 peer-checked:text-yellow-400 hover:text-yellow-300 transition"></i>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Review Text -->
+                <div>
+                    <label class="block text-sm font-medium mb-2">Your Review</label>
+                    <textarea name="review" rows="4" placeholder="Share your thoughts about this course..." class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"></textarea>
+                </div>
+                
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-semibold">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+        {% elif is_enrolled and user_rating %}
+        <div class="bg-gray-800 rounded-lg p-6 md:col-span-1">
+            <h3 class="text-lg font-bold mb-4">Your Rating</h3>
+            <div class="flex items-center space-x-2 mb-4">
+                <div class="flex text-yellow-400">
+                    {% for i in "12345" %}
+                        {% if i|add:0 <= user_rating.rating %}
+                        <i class="fas fa-star"></i>
+                        {% else %}
+                        <i class="fas fa-star text-gray-400"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <span class="text-xl font-bold">{{ user_rating.rating }}/5</span>
+            </div>
+            {% if user_rating.review %}
+            <p class="text-gray-300 text-sm">{{ user_rating.review }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <!-- Average Rating Display -->
+        {% if avg_rating or ratings %}
+        <div class="bg-gray-800 rounded-lg p-6 md:col-span-2">
+            <h3 class="text-lg font-bold mb-4">Course Rating</h3>
+            {% if avg_rating %}
+            <div class="flex items-end space-x-4 mb-6">
+                <div class="flex flex-col items-center">
+                    <span class="text-5xl font-bold text-yellow-400">{{ avg_rating|floatformat:1 }}</span>
+                    <div class="flex text-yellow-400 text-lg">
+                        {% for i in "12345" %}
+                            {% if i|add:0 <= avg_rating %}
+                            <i class="fas fa-star"></i>
+                            {% elif i|add:0|add:"-1" < avg_rating %}
+                            <i class="fas fa-star-half-alt"></i>
+                            {% else %}
+                            <i class="fas fa-star text-gray-400"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="text-gray-400 text-sm">{{ ratings.count }} reviews</span>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- All Reviews -->
+            <div class="space-y-4">
+                {% for rating in ratings %}
+                <div class="border-t border-gray-700 pt-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="font-semibold">{{ rating.student.get_full_name|default:rating.student.email }}</p>
+                            <div class="flex text-yellow-400 text-sm">
+                                {% for i in "12345" %}
+                                    {% if i|add:0 <= rating.rating %}
+                                    <i class="fas fa-star"></i>
+                                    {% else %}
+                                    <i class="fas fa-star text-gray-400"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <span class="text-gray-400 text-xs">{{ rating.created_at|timesince }} ago</span>
+                    </div>
+                    {% if rating.review %}
+                    <p class="text-gray-300 text-sm">{{ rating.review }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Course Stats -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold mb-6">Course Stats</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <p class="text-gray-400 text-sm mb-2">Total Resources</p>
+            <p class="text-3xl font-bold">{{ course.resources.count }}</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <p class="text-gray-400 text-sm mb-2">Students Enrolled</p>
+            <p class="text-3xl font-bold">{{ course.enrollment_count }}</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg">
+            <p class="text-gray-400 text-sm mb-2">Last Updated</p>
+            <p class="text-lg font-semibold">{{ course.updated_at|date:"M d, Y" }}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle referral link generation
+    document.getElementById('generate-referral-btn')?.addEventListener('click', function() {
+        fetch('{% url "courses:generate_referral" course.id %}')
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('referral-url').value = data.referral_url;
+                    document.getElementById('referral-section').classList.remove('hidden');
+                }
+            });
+    });
+    
+    // Copy referral link
+    document.getElementById('copy-referral-btn')?.addEventListener('click', function() {
+        const url = document.getElementById('referral-url');
+        url.select();
+        document.execCommand('copy');
+        this.textContent = '✓ Copied!';
+        setTimeout(() => {
+            this.textContent = '📋 Copy';
+        }, 2000);
+    });
+</script>
+{% endblock %}

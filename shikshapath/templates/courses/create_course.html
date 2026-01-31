@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Course - ShikshaPath{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold mb-2">Create a New Course</h1>
+        <p class="text-gray-400">Share your knowledge and start teaching</p>
+    </div>
+    
+    <div class="bg-gray-800 rounded-lg p-8">
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="bg-red-600 text-white p-4 rounded">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Course Title *</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                <div class="text-red-400 text-sm mt-1">
+                    {% for error in form.title.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Description *</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="text-red-400 text-sm mt-1">
+                    {% for error in form.description.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Price ($) *</label>
+                    {{ form.price }}
+                    {% if form.price.errors %}
+                    <div class="text-red-400 text-sm mt-1">
+                        {% for error in form.price.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Platform Fee (%) *</label>
+                    {{ form.platform_fee_percentage }}
+                    {% if form.platform_fee_percentage.errors %}
+                    <div class="text-red-400 text-sm mt-1">
+                        {% for error in form.platform_fee_percentage.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Course Thumbnail</label>
+                {{ form.thumbnail }}
+                {% if form.thumbnail.errors %}
+                <div class="text-red-400 text-sm mt-1">
+                    {% for error in form.thumbnail.errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+                <p class="text-gray-400 text-sm mt-1">Upload an image to represent your course</p>
+            </div>
+            
+            <div class="flex space-x-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded font-semibold">Create Course</button>
+                <a href="{% url 'accounts:instructor_dashboard' %}" class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded font-semibold">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input[type="text"],
+    input[type="number"],
+    input[type="file"],
+    textarea,
+    select {
+        @apply w-full px-4 py-2 bg-white border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500;
+    }
+    
+    textarea {
+        @apply resize-none;
+    }
+</style>
+{% endblock %}

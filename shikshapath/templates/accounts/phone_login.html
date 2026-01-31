@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script>
+        // Your firebaseConfig here
+        firebase.initializeApp(firebaseConfig = {
+            apiKey: "AIzaSyDgLfebG2B0weJyWccAxzVwYlMpDSdGtYk",
+            authDomain: "shikshapath-a3239.firebaseapp.com",
+            projectId: "shikshapath-a3239",
+            storageBucket: "shikshapath-a3239.firebasestorage.app",
+            messagingSenderId: "1015924873260",
+            appId: "1:1015924873260:web:e2a7fbda835687342e5989",
+            measurementId: "G-9MW6XR3D6S"
+});
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+    </script>
+</head>
+<body>
+    <div id="recaptcha-container"></div>
+    <input type="tel" id="phone" placeholder="+919876543210">
+    <button onclick="sendOTP()">Send OTP</button>
+    <input type="text" id="code" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify</button>
+
+    <script>
+        let confirmationResult;
+        
+        function sendOTP() {
+            const phone = document.getElementById('phone').value;
+            firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
+                .then(result => {
+                    confirmationResult = result;
+                    alert('OTP sent!');
+                }).catch(err => console.error(err));
+        }
+        
+        function verifyOTP() {
+            const code = document.getElementById('code').value;
+            confirmationResult.confirm(code).then(result => {
+                const idToken = result.user.getIdToken();
+                // Send token to Django
+                fetch('/accounts/firebase-login/', {
+                    method: 'POST',
+                    headers: {'Authorization': `Bearer ${idToken}`},
+                    credentials: 'same-origin'
+                }).then(res => {
+                    if (res.ok) window.location.href = '/dashboard/';
+                });
+            });
+        }
+    </script>
+</body>
+</html>

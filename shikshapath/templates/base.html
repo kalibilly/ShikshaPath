@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShikshaPath - Learn & Teach Online{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% static 'themes.css' as themes_css %}
+    <link rel="stylesheet" href="{{ themes_css }}">
+    {% static 'animations.css' as animations_css %}
+    <link rel="stylesheet" href="{{ animations_css }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Navigation -->
+    <nav class="bg-gray-800 border-b border-gray-700 nav-animate" style="animation: slideInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 py-4">
+                <!-- Logo and Menu Top Row -->
+                <div class="flex justify-between items-center w-full md:w-auto">
+                    <!-- Logo -->
+                    <a href="{% url 'home' %}" class="flex items-center space-x-2 font-bold text-xl text-blue-400 hover-scale transition-normal">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span class="logo-text">ShikshaPath</span>
+                    </a>
+                    
+                    <!-- Mobile menu button -->
+                    <div class="md:hidden">
+                        <button class="text-gray-300 hover:text-white">
+                            <i class="fas fa-bars text-2xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <form method="GET" action="{% url 'courses:search' %}" class="flex gap-2 w-full md:flex-1 md:max-w-md">
+                    <input type="text" name="q" placeholder="Search courses..." 
+                        class="flex-1 px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:border-blue-500">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+                
+                <!-- Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="{% url 'home' %}" class="hover:text-blue-400 transition-normal nav-item-stagger">Home</a>
+                    
+                    {% if user.is_authenticated %}
+                        {% if user.role == 'student' %}
+                            <a href="{% url 'courses:my_courses' %}" class="hover:text-blue-400 transition-normal nav-item-stagger">My Courses</a>
+                        {% elif user.role == 'instructor' %}
+                            <a href="{% url 'courses:create_course' %}" class="hover:text-blue-400 transition-normal nav-item-stagger">Create Course</a>
+                            <a href="{% url 'accounts:instructor_dashboard' %}" class="hover:text-blue-400 transition-normal nav-item-stagger">Dashboard</a>
+                        {% elif user.role == 'admin' %}
+                            <a href="{% url 'accounts:admin_dashboard' %}" class="hover:text-blue-400 transition-normal nav-item-stagger">Admin Panel</a>
+                        {% endif %}
+                        <a href="{% url 'accounts:profile' %}" class="hover:text-blue-400 transition-normal nav-item-stagger">Profile</a>
+                        
+                        <!-- Theme Toggle Button -->
+                        <div class="relative">
+                            <button id="theme-toggle" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition-normal btn-animate nav-item-stagger">
+                                <i class="fas fa-palette"></i>
+                                <span class="text-sm">Theme</span>
+                            </button>
+                            
+                            <!-- Theme Dropdown Menu -->
+                            <div id="theme-menu" class="hidden absolute right-0 mt-2 w-48 bg-gray-700 rounded-lg shadow-xl border border-gray-600 z-50 modal-content">
+                                <div class="p-2">
+                                    <div class="text-xs text-gray-400 px-3 py-2 font-semibold">CHOOSE THEME</div>
+                                    
+                                    <!-- Dark Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="dark">
+                                        <i class="fas fa-moon w-4"></i>
+                                        <span>Dark</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Light Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="light">
+                                        <i class="fas fa-sun w-4"></i>
+                                        <span>Light</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Gaming Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="gaming">
+                                        <i class="fas fa-gamepad w-4"></i>
+                                        <span>Gaming</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Transparent Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="transparent">
+                                        <i class="fas fa-eye-slash w-4"></i>
+                                        <span>Transparent</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Pink Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="pink">
+                                        <i class="fas fa-heart w-4"></i>
+                                        <span>Pink</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Purple Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="purple">
+                                        <i class="fas fa-magic w-4"></i>
+                                        <span>Purple</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Ocean Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="ocean">
+                                        <i class="fas fa-water w-4"></i>
+                                        <span>Ocean</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Forest Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="forest">
+                                        <i class="fas fa-tree w-4"></i>
+                                        <span>Forest</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Sunset Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="sunset">
+                                        <i class="fas fa-sun w-4"></i>
+                                        <span>Sunset</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                    
+                                    <!-- Midnight Theme -->
+                                    <button class="theme-option w-full text-left px-3 py-2 rounded hover:bg-gray-600 flex items-center gap-2 transition-all duration-150 hover-scale" data-theme="midnight">
+                                        <i class="fas fa-star w-4"></i>
+                                        <span>Midnight</span>
+                                        <i class="fas fa-check ml-auto text-green-400" style="display: none;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form method="POST" action="{% url 'accounts:logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-400 hover:text-red-300 bg-none border-none cursor-pointer btn-animate nav-item-stagger transition-normal">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'accounts:login' %}" class="hover:text-blue-400">Login</a>
+                        <a href="{% url 'accounts:register' %}" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            {% for message in messages %}
+                <div class="bg-{% if message.tags %}{{ message.tags }}{% else %}blue{% endif %}-500 text-white p-4 rounded mb-2 notification-enter" style="animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 mt-20 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold text-blue-400 mb-4">ShikshaPath</h3>
+                    <p class="text-gray-400">Learn and teach online courses with modern technology.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">About</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">About Us</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 ShikshaPath. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+
+    <!-- Theme Switching JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeMenu = document.getElementById('theme-menu');
+            const themeOptions = document.querySelectorAll('.theme-option');
+
+            // Toggle theme menu
+            themeToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                themeMenu.classList.toggle('hidden');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function() {
+                themeMenu.classList.add('hidden');
+            });
+
+            // Get CSRF token from cookie
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Handle theme selection
+            themeOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const selectedTheme = this.getAttribute('data-theme');
+                    const csrftoken = getCookie('csrftoken');
+
+                    // Send AJAX request to switch theme
+                    fetch(`/accounts/theme/switch/${selectedTheme}/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            // Apply theme immediately
+                            document.documentElement.setAttribute('data-theme', selectedTheme);
+                            document.body.setAttribute('data-theme', selectedTheme);
+
+                            // Update checkmarks
+                            themeOptions.forEach(opt => {
+                                const check = opt.querySelector('.fa-check');
+                                if (opt.getAttribute('data-theme') === selectedTheme) {
+                                    check.style.display = 'inline-block';
+                                } else {
+                                    check.style.display = 'none';
+                                }
+                            });
+
+                            // Close menu
+                            themeMenu.classList.add('hidden');
+                            
+                            // Show success message
+                            console.log('Theme switched successfully to:', selectedTheme);
+                        } else {
+                            alert('Failed to switch theme: ' + (data.error || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error switching theme: ' + error.message);
+                    });
+                });
+            });
+
+            // Set initial theme
+            const currentTheme = '{{ current_theme }}';
+            if (currentTheme && currentTheme.trim()) {
+                document.documentElement.setAttribute('data-theme', currentTheme);
+                document.body.setAttribute('data-theme', currentTheme);
+                
+                // Set checkmark for current theme
+                themeOptions.forEach(opt => {
+                    const check = opt.querySelector('.fa-check');
+                    if (opt.getAttribute('data-theme') === currentTheme) {
+                        check.style.display = 'inline-block';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

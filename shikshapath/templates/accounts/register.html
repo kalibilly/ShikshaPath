@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - ShikshaPath{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-900">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-6 text-center">Create Your Account</h2>
+        
+        {% if form.non_field_errors %}
+        <div class="bg-red-600 text-white p-4 rounded mb-4">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="POST" class="space-y-4" onchange="toggleRegistrationMethod(this.registration_method.value)">
+            {% csrf_token %}
+            
+            <!-- Registration Method Selection -->
+            <div>
+                <label class="block text-sm font-medium mb-2">How do you want to register?</label>
+                <div class="space-y-2">
+                    <label class="flex items-center text-gray-300">
+                        <input type="radio" name="registration_method" value="email" checked onchange="toggleRegistrationMethod('email')" class="mr-2">
+                        📧 Register with Email
+                    </label>
+                    <label class="flex items-center text-gray-300">
+                        <input type="radio" name="registration_method" value="mobile" onchange="toggleRegistrationMethod('mobile')" class="mr-2">
+                        📱 Register with Mobile Number
+                    </label>
+                </div>
+                {% if form.registration_method.errors %}
+                <span class="text-red-400 text-sm">{{ form.registration_method.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <!-- Email Field (default visible) -->
+            <div id="email_section">
+                <label class="block text-sm font-medium mb-2">Email Address</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <span class="text-red-400 text-sm">{{ form.email.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <!-- Mobile Field (initially hidden) -->
+            <div id="mobile_section" style="display:none;">
+                <label class="block text-sm font-medium mb-2">Mobile Number</label>
+                {{ form.mobile_number }}
+                {% if form.mobile_number.errors %}
+                <span class="text-red-400 text-sm">{{ form.mobile_number.errors }}</span>
+                {% endif %}
+                <small class="text-gray-400">Format: +1-234-567-8900 or 1234567890</small>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">First Name</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}
+                <span class="text-red-400 text-sm">{{ form.first_name.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Last Name</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}
+                <span class="text-red-400 text-sm">{{ form.last_name.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Register as</label>
+                {{ form.role }}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Password</label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                <div class="text-red-400 text-sm">
+                    {% for error in form.password1.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <small class="text-gray-400 block mt-2">
+                    <strong>Requirements:</strong> 8+ characters, uppercase, lowercase, number & special char (!@#$%^&*)
+                </small>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Confirm Password</label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                <span class="text-red-400 text-sm">{{ form.password2.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold">
+                Create Account
+            </button>
+        </form>
+        
+        <p class="text-center mt-6 text-gray-400">
+            Already have an account? <a href="{% url 'accounts:login' %}" class="text-blue-400 hover:text-blue-300">Login here</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    select {
+        @apply w-full px-4 py-2 bg-white border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500;
+    }
+    
+    input[type="radio"] {
+        cursor: pointer;
+    }
+</style>
+
+<script>
+function toggleRegistrationMethod(method) {
+    const emailSection = document.getElementById('email_section');
+    const mobileSection = document.getElementById('mobile_section');
+    
+    if (method === 'mobile') {
+        emailSection.style.display = 'none';
+        mobileSection.style.display = 'block';
+    } else {
+        emailSection.style.display = 'block';
+        mobileSection.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

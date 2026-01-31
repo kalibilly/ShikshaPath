@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - ShikshaPath{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-900">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
+        
+        {% if form.non_field_errors %}
+        <div class="bg-red-600 text-white p-4 rounded mb-4">
+            {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Email</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                <span class="text-red-400 text-sm">{{ form.username.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium mb-2">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                <span class="text-red-400 text-sm">{{ form.password.errors }}</span>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold">
+                Login
+            </button>
+        </form>
+        
+        <div class="mt-4">
+            <a href="{% url 'accounts:forgot_password' %}" class="text-blue-400 hover:text-blue-300 text-sm block text-center mb-2">
+                🔐 Forgot Password?
+            </a>
+            <a href="{% url 'accounts:account_recovery' %}" class="text-blue-400 hover:text-blue-300 text-sm block text-center">
+                🔍 Can't find your account?
+            </a>
+        </div>
+        
+        <hr class="my-4 border-gray-600">
+        
+        <p class="text-center mt-4 text-gray-400">
+            Don't have an account? <a href="{% url 'accounts:register' %}" class="text-blue-400 hover:text-blue-300">Register here</a>
+        </p>
+    </div>
+</div>
+
+<style>
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+        @apply w-full px-4 py-2 bg-white border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500;
+    }
+</style>
+{% endblock %}
