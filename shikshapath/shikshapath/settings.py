@@ -161,8 +161,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Razorpay Configuration
-RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', 'rzp_test_S745IMNgwyRqET')
-RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', '69ru2lkNEcid46V6MhRlHz6m')
+RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', '')
+RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', '')
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -193,7 +193,7 @@ EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'shiksha.path2553@gmail.com')  # Your email address
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'krlu vrlq ysfu yjja')  # Your app password or token
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')  # Your app password or token
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@shikshapath.com')
 
 
@@ -263,3 +263,4 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Firebase will be initialized in accounts/apps.py
+
