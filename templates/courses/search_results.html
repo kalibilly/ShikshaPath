@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results - ShikshaPath{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Search Header -->
+    <div class="mb-12">
+        <h1 class="text-4xl font-bold mb-4">Search Results</h1>
+        {% if query %}
+        <p class="text-gray-400 text-lg">Showing results for "<span class="text-blue-400 font-semibold">{{ query }}</span>"</p>
+        {% else %}
+        <p class="text-gray-400 text-lg">Enter a search term above</p>
+        {% endif %}
+    </div>
+
+    <!-- Search Form -->
+    <div class="mb-12">
+        <form method="GET" class="flex gap-2">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search courses, instructors..." 
+                class="flex-1 px-4 py-3 bg-white border border-gray-300 rounded text-gray-900 placeholder-gray-500 focus:outline-none focus:border-blue-500">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded font-semibold">Search</button>
+            {% if query %}
+            <a href="{% url 'home' %}" class="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded font-semibold">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Results -->
+    {% if query %}
+        {% if courses %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for course in courses %}
+                <div class="bg-gray-800 rounded-lg overflow-hidden hover:transform hover:scale-105 transition-all">
+                    <!-- Course Thumbnail -->
+                    {% if course.thumbnail %}
+                        <img src="{{ course.thumbnail.url }}" alt="{{ course.title }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                            <i class="fas fa-book text-4xl text-white opacity-70"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Course Content -->
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold flex-1">{{ course.title }}</h3>
+                            {% if course.is_private %}
+                            <span class="bg-yellow-600 text-white text-xs px-2 py-1 rounded">Private</span>
+                            {% endif %}
+                        </div>
+
+                        <p class="text-gray-400 text-sm mb-3">
+                            by <span class="text-blue-400">{{ course.instructor.get_full_name|default:course.instructor.email }}</span>
+                        </p>
+
+                        <p class="text-gray-300 text-sm mb-4 line-clamp-2">{{ course.description }}</p>
+
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-gray-400 text-sm">
+                                <span><i class="fas fa-users"></i> {{ course.enrollment_count }} enrolled</span>
+                                <span><i class="fas fa-layer-group"></i> {{ course.resources.count }} resources</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <span class="text-2xl font-bold text-blue-400">${{ course.price }}</span>
+                            <a href="{% url 'courses:course_detail' course.id %}" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-sm font-semibold">View</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-gray-800 rounded-lg p-12 text-center">
+                <i class="fas fa-search text-4xl text-gray-500 mb-4 block"></i>
+                <h2 class="text-2xl font-bold mb-2">No courses found</h2>
+                <p class="text-gray-400 mb-6">Try searching with different keywords or check out all courses.</p>
+                <a href="{% url 'home' %}" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded font-semibold">View All Courses</a>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="bg-gray-800 rounded-lg p-12 text-center">
+            <i class="fas fa-search text-4xl text-gray-500 mb-4 block"></i>
+            <h2 class="text-2xl font-bold mb-2">Start searching</h2>
+            <p class="text-gray-400 mb-6">Search by course title, instructor name, or keywords to find courses.</p>
+            <a href="{% url 'home' %}" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded font-semibold">View All Courses</a>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}

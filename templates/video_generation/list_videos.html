@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Generated Videos - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Generated Animation Videos</h2>
+                {% if user == course.instructor %}
+                    <a href="{% url 'video_generation:generate_video' course.id %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Generate New Video
+                    </a>
+                {% endif %}
+            </div>
+            
+            <p class="text-muted">Course: <strong>{{ course.title }}</strong></p>
+            
+            {% if videos %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Content Preview</th>
+                                <th>Style</th>
+                                <th>Quality</th>
+                                <th>Duration</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for video in videos %}
+                                <tr>
+                                    <td>
+                                        <small>{{ video.source_content|truncatewords:5 }}</small>
+                                    </td>
+                                    <td>{{ video.get_animation_style_display }}</td>
+                                    <td>
+                                        <span class="badge bg-info">
+                                            {% if video.quality == 'low' %}
+                                                480p
+                                            {% elif video.quality == 'medium' %}
+                                                720p
+                                            {% else %}
+                                                1080p
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>{{ video.duration }}s</td>
+                                    <td>
+                                        {% if video.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% elif video.status == 'processing' %}
+                                            <span class="badge bg-warning">Processing</span>
+                                        {% elif video.status == 'pending' %}
+                                            <span class="badge bg-secondary">Pending</span>
+                                        {% elif video.status == 'failed' %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if video.status == 'processing' %}
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: {{ video.progress_percentage }}%;" 
+                                                     aria-valuenow="{{ video.progress_percentage }}" 
+                                                     aria-valuemin="0" aria-valuemax="100">
+                                                    {{ video.progress_percentage }}%
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <small>{{ video.progress_percentage }}%</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ video.created_at|date:"M d, Y" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if video.status == 'completed' %}
+                                            <a href="{% url 'video_generation:view_video' video.id %}" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                        {% endif %}
+                                        {% if user == course.instructor %}
+                                            <form method="post" action="{% url 'video_generation:delete_video' video.id %}" 
+                                                  style="display: inline;" 
+                                                  onsubmit="return confirm('Are you sure you want to delete this video?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <p>No animation videos generated yet.</p>
+                    {% if user == course.instructor %}
+                        <a href="{% url 'video_generation:generate_video' course.id %}" class="btn btn-primary btn-sm">
+                            Generate Your First Video
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <div class="mt-4">
+                <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-secondary">Back to Course</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
