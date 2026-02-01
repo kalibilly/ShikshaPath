@@ -1,63 +1,7 @@
-# Core Django
-Django==5.2.7
-asgiref==3.10.0
-sqlparse==0.5.3
-tzdata==2025.2
-
-# Database
-psycopg2-binary==2.9.9  # PostgreSQL adapter
-dj-database-url==2.1.0   # Database URL parser for cloud deployment
-PyMySQL==1.1.2           # MySQL support (optional fallback)
-
-# Authentication & Security
-PyJWT==2.10.1
-cryptography==46.0.3
-bcrypt==5.0.0
-
-# Firebase (optional - for phone authentication)
-firebase-admin==7.1.0
-google-cloud-firestore==2.23.0
-google-cloud-storage==3.8.0
-google-auth==2.48.0
-Pyrebase4==4.9.0
-
-# File Processing
-PyPDF2==3.0.1           # PDF text extraction (using latest stable)
-python-docx==0.8.11     # Word document processing
-Pillow==10.0.0          # Image processing (compatible version)
-
-# Video Processing (optional - can be commented out to reduce dependencies)
-# ffmpeg-python==0.2.0
-# moviepy==1.0.3
-imageio==2.33.1
-imageio-ffmpeg==0.4.9
-
-# Async Tasks
-celery==5.6.2
-redis==7.1.0
-kombu==5.6.2
-
-# API & REST
-djangorestframework==3.16.1
-django-cors-headers==4.9.0
-
-# Utilities
-python-dotenv==0.19.0   # Environment variable management
-requests==2.31.0
-Werkzeug==3.0.0
-click==8.3.0
-
-# Production Server
-gunicorn==21.2.0        # WSGI HTTP Server
-whitenoise==6.6.0       # Static files in production
-
-# Build Tools (REQUIRED for Render deployment)
-setuptools==75.0.0      # Package building
-wheel==0.44.0           # Wheel distribution format
-pip==26.0.0             # Package installer
-
-# Misc
-certifi==2024.2.2
-urllib3==2.1.0
-idna==3.6
-
+Django==5.1.7
+gunicorn==21.2.0
+whitenoise==6.6.0
+psycopg2-binary==2.9.9
+python-decouple==3.8
+razorpay==1.4.1
+stripe==10.6.0
