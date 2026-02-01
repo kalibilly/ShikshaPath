@@ -1,0 +1,344 @@
+/* ShikshaPath Theme System - CSS Variables */
+
+/* ============================================
+   DARK THEME (Default)
+   ============================================ */
+:root.theme-dark {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --background-color: #1a1a1a;
+    --background-secondary: #2d2d2d;
+    --text-color: #ffffff;
+    --text-secondary: #b0b0b0;
+    --accent-color: #ff6b6b;
+    --border-color: #404040;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --input-bg: #2d2d2d;
+    --input-border: #404040;
+}
+
+/* ============================================
+   LIGHT THEME
+   ============================================ */
+:root.theme-light {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --background-color: #ffffff;
+    --background-secondary: #f5f5f5;
+    --text-color: #000000;
+    --text-secondary: #666666;
+    --accent-color: #ff6b6b;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+}
+
+/* ============================================
+   GAMING THEME
+   ============================================ */
+:root.theme-gaming {
+    --primary-color: #00ff00;
+    --primary-hover: #00cc00;
+    --background-color: #0a0e27;
+    --background-secondary: #16213e;
+    --text-color: #00ff00;
+    --text-secondary: #00dd00;
+    --accent-color: #ff00ff;
+    --border-color: #00ff00;
+    --shadow-color: rgba(0, 255, 0, 0.3);
+    --input-bg: #0f1419;
+    --input-border: #00ff00;
+}
+
+/* ============================================
+   TRANSPARENT (Glassmorphism)
+   ============================================ */
+:root.theme-transparent {
+    --primary-color: #ffffff;
+    --primary-hover: #e0e0e0;
+    --background-color: rgba(20, 20, 30, 0.7);
+    --background-secondary: rgba(40, 40, 60, 0.7);
+    --text-color: #ffffff;
+    --text-secondary: #d0d0d0;
+    --accent-color: #00d4ff;
+    --border-color: rgba(255, 255, 255, 0.2);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --input-bg: rgba(30, 30, 50, 0.5);
+    --input-border: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   PINK PARADISE
+   ============================================ */
+:root.theme-pink {
+    --primary-color: #ff69b4;
+    --primary-hover: #ff1493;
+    --background-color: #faf0f5;
+    --background-secondary: #f5e6ed;
+    --text-color: #2d2d2d;
+    --text-secondary: #666666;
+    --accent-color: #ff1493;
+    --border-color: #f0d4e0;
+    --shadow-color: rgba(255, 105, 180, 0.2);
+    --input-bg: #ffffff;
+    --input-border: #ffb6d9;
+}
+
+/* ============================================
+   PURPLE PASSION
+   ============================================ */
+:root.theme-purple {
+    --primary-color: #9370db;
+    --primary-hover: #7851a9;
+    --background-color: #2d1b4e;
+    --background-secondary: #3d2b5e;
+    --text-color: #e8d5f2;
+    --text-secondary: #c7a8db;
+    --accent-color: #c77dff;
+    --border-color: #5a3d7a;
+    --shadow-color: rgba(199, 125, 255, 0.2);
+    --input-bg: #1f0f36;
+    --input-border: #7851a9;
+}
+
+/* ============================================
+   OCEAN BLUE
+   ============================================ */
+:root.theme-ocean {
+    --primary-color: #0077be;
+    --primary-hover: #005a8f;
+    --background-color: #0a1929;
+    --background-secondary: #0f2946;
+    --text-color: #e0f2fe;
+    --text-secondary: #a8d8ea;
+    --accent-color: #00d4ff;
+    --border-color: #1e5a8e;
+    --shadow-color: rgba(0, 116, 217, 0.2);
+    --input-bg: #051a2e;
+    --input-border: #0077be;
+}
+
+/* ============================================
+   FOREST GREEN
+   ============================================ */
+:root.theme-forest {
+    --primary-color: #2d5016;
+    --primary-hover: #1f3a0f;
+    --background-color: #0f2818;
+    --background-secondary: #1a3d25;
+    --text-color: #d4e8d4;
+    --text-secondary: #9fbf9f;
+    --accent-color: #4ade80;
+    --border-color: #2d5016;
+    --shadow-color: rgba(45, 80, 22, 0.3);
+    --input-bg: #071d0d;
+    --input-border: #2d5016;
+}
+
+/* ============================================
+   SUNSET
+   ============================================ */
+:root.theme-sunset {
+    --primary-color: #f97316;
+    --primary-hover: #ea580c;
+    --background-color: #1c0a00;
+    --background-secondary: #3d1f08;
+    --text-color: #fef3c7;
+    --text-secondary: #fcd34d;
+    --accent-color: #fbbf24;
+    --border-color: #f97316;
+    --shadow-color: rgba(249, 115, 22, 0.2);
+    --input-bg: #2d1410;
+    --input-border: #f97316;
+}
+
+/* ============================================
+   MIDNIGHT BLUE
+   ============================================ */
+:root.theme-midnight {
+    --primary-color: #1e40af;
+    --primary-hover: #1e3a8a;
+    --background-color: #0c1421;
+    --background-secondary: #1e293b;
+    --text-color: #e0e7ff;
+    --text-secondary: #a5b4fc;
+    --accent-color: #60a5fa;
+    --border-color: #1e40af;
+    --shadow-color: rgba(30, 64, 175, 0.2);
+    --input-bg: #0f172a;
+    --input-border: #1e40af;
+}
+
+/* ============================================
+   BASE THEME STYLES (Apply to all)
+   ============================================ */
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--background-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+    color: var(--primary-color) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* Cards */
+.card {
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+/* Forms */
+.form-control,
+.form-select,
+textarea,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"] {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+}
+
+/* Tables */
+.table {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.table-dark {
+    background-color: var(--background-secondary);
+    border-color: var(--border-color);
+}
+
+/* Modals */
+.modal-content {
+    background-color: var(--background-secondary);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Alerts */
+.alert {
+    border: 1px solid var(--border-color);
+}
+
+.alert-info {
+    background-color: var(--background-secondary);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+/* Scrollbar (for webkit browsers) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-hover);
+}
+
+/* Badges */
+.badge {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+/* Text utilities */
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+.bg-light {
+    background-color: var(--background-secondary) !important;
+}
+
+/* Dropdowns */
+.dropdown-menu {
+    background-color: var(--background-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+}
+
+/* Helper for Gaming Theme */
+.theme-gaming .text-muted {
+    color: var(--text-secondary) !important;
+    text-shadow: 0 0 5px var(--primary-color);
+}
+
+/* Gaming theme glow effect */
+.theme-gaming .btn-primary,
+.theme-gaming .badge {
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* Smooth transitions for all theme-aware elements */
+body,
+.navbar,
+.card,
+.form-control,
+.btn,
+a {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
