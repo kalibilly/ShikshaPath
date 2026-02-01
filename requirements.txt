@@ -51,7 +51,13 @@ click==8.3.0
 gunicorn==21.2.0        # WSGI HTTP Server
 whitenoise==6.6.0       # Static files in production
 
+# Build Tools (REQUIRED for Render deployment)
+setuptools==75.0.0      # Package building
+wheel==0.44.0           # Wheel distribution format
+pip==26.0.0             # Package installer
+
 # Misc
 certifi==2024.2.2
 urllib3==2.1.0
 idna==3.6
+
