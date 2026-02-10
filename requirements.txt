@@ -7,3 +7,5 @@ razorpay==1.4.1
 setuptools>=75.0.0
 wheel>=0.44.0
 pip>=26.0.0
+dj-database-url==2.1.0
+
