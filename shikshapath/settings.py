@@ -29,7 +29,7 @@ SECRET_KEY = ''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '.onrender.com').split(',')
 
 
 # Application definition
@@ -263,4 +263,5 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Firebase will be initialized in accounts/apps.py
+
 
