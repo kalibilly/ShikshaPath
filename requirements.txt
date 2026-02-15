@@ -1,5 +1,6 @@
 Django==5.2.7
 gunicorn==21.2.0
+uvicorn==0.40.0
 whitenoise==6.6.0
 psycopg[binary]==3.2.3
 python-decouple==3.8
@@ -7,5 +8,6 @@ razorpay==1.4.1
 setuptools>=75.0.0
 wheel>=0.44.0
 pip>=26.0.0
-dj-database-url==2.1.0
+dj-database-ur==3.1.0
+
 
