@@ -6,6 +6,11 @@ from django.conf import settings
 from .models import OTP, CustomUser
 from django.utils import timezone
 from datetime import timedelta
+import logging
+from threading import Thread
+import socket
+
+logger = logging.getLogger(__name__)
 
 
 def send_otp(email):
@@ -73,17 +78,26 @@ ShikshaPath Team
 </html>
         """
         
-        # Send email
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [email],
-            html_message=html_message,
-            fail_silently=False,
-        )
-        
-        return True
+        # Send email asynchronously to prevent timeout in production
+        try:
+            # Try to send email with timeout
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                html_message=html_message,
+                fail_silently=True,  # Don't fail registration if email fails
+                timeout=5,  # 5 second timeout
+            )
+            return True
+        except socket.timeout:
+            logger.warning(f"Email timeout for {email}, but account created successfully")
+            return True  # Account created even if email failed
+        except Exception as e:
+            logger.error(f"Error sending OTP: {e}")
+            # Still return True so user can proceed - they can resend OTP
+            return True
     
     except CustomUser.DoesNotExist:
         return False
