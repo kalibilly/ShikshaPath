@@ -3,7 +3,11 @@ from .settings import *
 from .settings import BASE_DIR
 import dj_database_url
 
-ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]  # Allow all hosts for cloud deployment (adjust as needed)
+ALLOWED_HOSTS = [
+    '*.onrender.com',
+    'shiksha-path.online',
+    'www.shiksha-path.online',
+]  # Allow all hosts for cloud deployment (adjust as needed)
 CSRF_TRUSTED_ORIGINS = [f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}"]  # Trust the cloud deployment domain for CSRF
 
 DEBUG = False # disable debug mode for production
@@ -35,4 +39,5 @@ DATABASES = {
         conn_max_age=600,
     )
 }
+
 
