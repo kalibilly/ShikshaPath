@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Q
+import logging
 from .forms import (
     CustomUserCreationForm, CustomAuthenticationForm, SendOTPForm, VerifyOTPForm,
     ForgotPasswordForm, ResetPasswordOTPForm, SetNewPasswordForm,
@@ -29,33 +30,46 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         # Form already sets username = email and is_active = False
-        response = super().form_valid(form)
-        user = self.object
-        
-        # Create OTP for email verification
-        otp, created = OTP.objects.get_or_create(
-            user=user,
-            defaults={
-                'expires_at': timezone.now() + timedelta(minutes=10)
-            }
-        )
-        
-        # If OTP exists but expired, create a new one
-        if not created and not otp.is_valid():
-            otp.delete()
-            otp = OTP.objects.create(
+        # Save user with error handling
+        try:
+            response = super().form_valid(form)
+            user = self.object
+            
+            # Verify user was actually created in database
+            user.refresh_from_db()
+            
+            # Create OTP for email verification
+            otp, created = OTP.objects.get_or_create(
                 user=user,
-                expires_at=timezone.now() + timedelta(minutes=10)
+                defaults={
+                    'expires_at': timezone.now() + timedelta(minutes=10)
+                }
             )
-        
-        # Send OTP email
-        send_otp(user.email)
-        
-        # Store user email in session for confirmation page
-        self.request.session['otp_email'] = user.email
-        
-        # Redirect to OTP verification page
-        return redirect('accounts:verify_otp')
+            
+            # If OTP exists but expired, create a new one
+            if not created and not otp.is_valid():
+                otp.delete()
+                otp = OTP.objects.create(
+                    user=user,
+                    expires_at=timezone.now() + timedelta(minutes=10)
+                )
+            
+            # Send OTP email (won't block with new timeout handling)
+            send_otp(user.email)
+            
+            # Store user email in session for confirmation page
+            self.request.session['otp_email'] = user.email
+            self.request.session.save()  # Ensure session is saved
+            
+            messages.info(self.request, f"OTP sent to {user.email}. Please verify within 10 minutes.")
+            
+            # Redirect to OTP verification page
+            return redirect('accounts:verify_otp')
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error(f"Registration error: {str(e)}")
+            messages.error(self.request, "Error during registration. Please try again.")
+            return self.form_invalid(form)
 
 
 def send_otp_view(request):
