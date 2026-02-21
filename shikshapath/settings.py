@@ -54,6 +54,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Static files caching in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,6 +62,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# WhiteNoise configuration for production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'shikshapath.urls'
 
@@ -263,3 +267,92 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Firebase will be initialized in accounts/apps.py
+# ============================================================================
+# PRODUCTION PERFORMANCE OPTIMIZATION
+# ============================================================================
+
+# Database Connection Pooling (for better performance in production)
+if os.environ.get('DATABASE_URL'):
+    # Production: Add connection pooling for persistent connections
+    DATABASES['default']['CONN_MAX_AGE'] = 600  # 10 minutes - reuse connections
+    DATABASES['default']['OPTIONS'] = {
+        'connect_timeout': 10,  # 10 second connection timeout
+    }
+
+# Caching Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'shikshapath-cache',
+        'TIMEOUT': 300,  # 5 minutes default cache timeout
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
+
+# Cache timeout for session data (prevents session lookups)
+SESSION_CACHE_ALIAS = 'default'
+
+# Email Configuration - Add Timeout for Production
+if not DEBUG:
+    # Production: Shorter email timeout to prevent hangs
+    EMAIL_TIMEOUT = 5  # 5 second timeout for email sending
+
+# Django Database Settings - Connect timeout and Read timeout
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default']['ATOMIC_REQUESTS'] = False  # Disable by default for better concurrency
+    DATABASES['default']['AUTOCOMMIT'] = True
+
+# Gunicorn Worker Configuration Settings
+# These are hints for the gunicorn start command
+GUNICORN_WORKERS = 2
+GUNICORN_THREADS = 4
+GUNICORN_TIMEOUT = 60
+
+# ============================================================================
+# LOGGING CONFIGURATION FOR DEBUGGING
+# ============================================================================
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{levelname}] {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
+            'backupCount': 5,
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'WARNING',
+            'propagate': True,
+        },
+    },
+}
+
+# Ensure logs directory exists
+os.makedirs(BASE_DIR / 'logs', exist_ok=True)
